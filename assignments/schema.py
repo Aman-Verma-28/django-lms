@@ -22,17 +22,15 @@ class Query(ObjectType):
     submissions = graphene.List(SubmissionType)
 
     def resolve_assignment(self, info, **kwargs):
-        id = kwargs.get('id')
 
-        if id is not None:
+        if (id := kwargs.get('id')) is not None:
             return Assignment.objects.get(pk=id)
         
         return None
     
     def resolve_submission(self, info, **kwargs):
-        id = kwargs.get('id')
 
-        if id is not None:
+        if (id := kwargs.get('id')) is not None:
             return SubmitAssignment.objects.get(pk=id)
         
         return None
@@ -95,8 +93,7 @@ class UpdateAssignment(graphene.Mutation):
     def mutate(root, info, id, input=None):
         ok = False
         course = Course.objects.get(pk=input.course.id)
-        assignment_instance = Assignment.objects.get(pk=id)
-        if assignment_instance:
+        if assignment_instance := Assignment.objects.get(pk=id):
             ok = True
             assignment_instance.assignment_name = input.assignment_name
             assignment_instance.assignment_description = input.assignment_description
@@ -145,8 +142,7 @@ class UpdateSubmission(graphene.Mutation):
         ok = False
         author = User.objects.get(pk=input.author.id)
         assignment_ques = Assignment.objects.get(pk=input.assignment_ques.id)
-        submission_instance = SubmitAssignment.objects.get(pk=id)
-        if submission_instance:
+        if submission_instance := SubmitAssignment.objects.get(pk=id):
             ok = True
             submission_instance.author=author,
             submission_instance.topic=input.topic,

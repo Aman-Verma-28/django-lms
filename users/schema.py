@@ -11,9 +11,8 @@ class Query(ObjectType):
     users = graphene.List(UserType)
 
     def resolve_user(self, info, **kwargs):
-        id = kwargs.get('id')
 
-        if id is not None:
+        if (id := kwargs.get('id')) is not None:
             return User.objects.get(pk=id)
 
         return None
@@ -62,8 +61,7 @@ class UpdateUser(graphene.Mutation):
     @staticmethod
     def mutate(root, info, id, input=None):
         ok = False
-        user_instance = User.objects.get(pk=id)
-        if user_instance:
+        if user_instance := User.objects.get(pk=id):
             ok = True
             user_instance.username = input.username
             user_instance.first_name = input.first_name

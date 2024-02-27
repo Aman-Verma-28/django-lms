@@ -16,9 +16,8 @@ class Query(ObjectType):
     resources = graphene.List(ResourceType)
 
     def resolve_resource(self, info, **kwargs):
-        id = kwargs.get('id')
 
-        if id is not None:
+        if (id := kwargs.get('id')) is not None:
             return Resource.objects.get(pk=id)
 
         return None
@@ -66,8 +65,7 @@ class UpdateResource(graphene.Mutation):
     def mutate(root, info, id, input=None):
         ok = False
         course = Course.objects.get(pk=input.course.id)
-        resource_instance = Resource.objects.get(pk=id)
-        if resource_instance:
+        if resource_instance := Resource.objects.get(pk=id):
             ok = True
             resource_instance.resource_name = input.resource_name
             resource_instance.resource_file = input.resource_file

@@ -13,9 +13,8 @@ class Query(ObjectType):
     courses = graphene.List(CourseType)
     
     def resolve_course(self, info, **kwargs):
-        id = kwargs.get('id')
 
-        if id is not None:
+        if (id := kwargs.get('id')) is not None:
             return Course.objects.get(pk=id)
         
         return None
@@ -43,8 +42,7 @@ class CreateCourse(graphene.Mutation):
         students = []
         teacher = User.objects.get(pk=input.teacher.id)
         for student_input in input.students:
-            student = User.objects.get(pk=student_input.id)
-            if student is None:
+            if (student := User.objects.get(pk=student_input.id)) is None:
                 return CreateCourse(ok=False, course=None)
             students.append(student)
         course_instance = Course(
